@@ -3,7 +3,7 @@
 // 
 
 #include "ColorInterpolater.h"
-#include <Adafruit_NeoPixel.h>
+//#include <Adafruit_NeoPixel.h>
 #include "LEDColor.h"
 
 ColorInterpolater::ColorInterpolater(uint8_t minR, uint8_t minG, uint8_t minB, uint8_t maxR, uint8_t maxG, uint8_t maxB, int minValue, int maxValue)

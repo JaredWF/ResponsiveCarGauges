@@ -33,6 +33,7 @@
     </ClInclude>
     <ClInclude Include="__vm\.CarLighting.vsarduino.h" />
     <ClInclude Include="PIDEngineLoad.h" />
+    <ClInclude Include="__vm\.ResponsiveCarGauges.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LED.cpp">
