@@ -14,41 +14,55 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\GaugeColors">
+      <UniqueIdentifier>{e7caa53d-3fd6-49da-8ab1-6c0a346f1ee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GaugeColors">
+      <UniqueIdentifier>{5211f5ad-9d93-4aca-b056-f8388a0d97f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="CarLighting.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LED.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ColorInterpolater.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LEDColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PID.h">
+    <ClInclude Include="__vm\.CarLighting.vsarduino.h" />
+    <ClInclude Include="__vm\.ResponsiveCarGauges.vsarduino.h" />
+    <ClInclude Include="SolidColor.h">
+      <Filter>Header Files\GaugeColors</Filter>
+    </ClInclude>
+    <ClInclude Include="GaugeColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="__vm\.CarLighting.vsarduino.h" />
-    <ClInclude Include="PIDEngineLoad.h" />
-    <ClInclude Include="__vm\.ResponsiveCarGauges.vsarduino.h" />
+    <ClInclude Include="EngineColor.h">
+      <Filter>Header Files\GaugeColors</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalogButtonsDown.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LED.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ColorInterpolater.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LEDColor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PID.cpp">
+    <ClCompile Include="GaugeColor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PIDEngineLoad.cpp">
+    <ClCompile Include="SolidColor.cpp">
+      <Filter>Source Files\GaugeColors</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineColor.cpp">
+      <Filter>Source Files\GaugeColors</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalogButtonsDown.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
