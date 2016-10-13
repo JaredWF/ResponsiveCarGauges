@@ -45,6 +45,9 @@
     <ClInclude Include="AnalogButtonsDown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Downloads\arduino-ELM327-master\arduino-ELM327-master\ELM327.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ColorInterpolater.cpp">
@@ -63,6 +66,9 @@
       <Filter>Source Files\GaugeColors</Filter>
     </ClCompile>
     <ClCompile Include="AnalogButtonsDown.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Downloads\arduino-ELM327-master\arduino-ELM327-master\ELM327.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

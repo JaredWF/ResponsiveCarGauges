@@ -12,18 +12,19 @@
 #include "GaugeColor.h"
 #include "LEDColor.h"
 #include "ColorInterpolater.h"
-#include <OBD.h>
-#include <Wire.h>
+#include "ELM327.h"
+
+enum PID { RPM, SPEED, FUEL_LEVEL, ENGINE_TEMP };
 
 class EngineColor : public GaugeColor
 {
 public:
 	
-	EngineColor(COBD *obd, byte pid, String name, LEDColor minColor, LEDColor maxColor, int minValue, int maxValue);
+	EngineColor(Elm327 *obd, PID pid, String name, LEDColor minColor, LEDColor maxColor, int minValue, int maxValue);
 	uint32_t GetColor();
 private:
-	COBD *_obd;
-	byte _pid;
+	Elm327 *_obd;
+	PID _pid;
 	ColorInterpolater *_interpolater;
 };
 

@@ -40,7 +40,8 @@ int ColorInterpolater::Clamp(int value)
 
 uint8_t ColorInterpolater::Interpolate(uint8_t min, uint8_t max, int value)
 {
-	return (max - min) * ((value - _minValue) / (_maxValue - _minValue)) + min;
+	value = Clamp(value);
+	return (uint8_t)((max - min) * ((float)(value - _minValue) / (_maxValue - _minValue)) + min);
 }
 
 

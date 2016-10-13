@@ -1,6 +1,4 @@
 #include "AnalogButtonsDown.h"
-#include <OBD.h>
-#include <Wire.h>
 #include "EngineColor.h"
 #include "SolidColor.h"
 #include "GaugeColor.h"
@@ -9,17 +7,20 @@
 #include <Adafruit_NeoPixel.h>
 #include <LiquidCrystal.h>
 #include <EEPROM.h>
+#include <SoftwareSerial.h>
+#include "ELM327.h"
 
 static const int LED_COUNT = 8;
-static const int SETTING_COUNT = 8;
+static const int SETTING_COUNT = 10;
 static const int BUTTON_COUNT = 6;
 static const int BUTTON_TOLERANCE = 2;
 
-bool lightsOn = true;
-bool useObd = false;
-Adafruit_NeoPixel neo = Adafruit_NeoPixel(8, 6, NEO_GRB + NEO_KHZ800);
+SoftwareSerial *Bluetooth = new SoftwareSerial(5, 3);;// (5, 3); // RX, TX
+Elm327 *obd  = new Elm327(Bluetooth);
+
+Adafruit_NeoPixel neo = Adafruit_NeoPixel(8, 2, NEO_GRB + NEO_KHZ800);
 LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
-COBD *obd = new COBD();
+
 GaugeColor* gaugeColors[SETTING_COUNT] = { new SolidColor(LEDColor(0, 0, 255), "Blue"),
 											new SolidColor(LEDColor(255, 0, 0), "Red"),
 											new SolidColor(LEDColor(255, 255, 255), "White"),
@@ -27,8 +28,9 @@ GaugeColor* gaugeColors[SETTING_COUNT] = { new SolidColor(LEDColor(0, 0, 255), "
 											new SolidColor(LEDColor(0, 255, 0), "Green"),
 											new SolidColor(LEDColor(160, 0, 255), "Purple"),
 											new SolidColor(LEDColor(255, 100, 0), "Orange"),
-											new SolidColor(LEDColor(255, 255, 0), "Yellow") };
-											//new EngineColor(obd, PID_RPM, "RPM", LEDColor(255, 255, 255), LEDColor(255, 50, 50), 0, 7000)};
+											new SolidColor(LEDColor(255, 255, 0), "Yellow"),
+											new EngineColor(obd, RPM, "RPM", LEDColor(255, 255, 255), LEDColor(255, 0, 0), 0, 6500),
+											new EngineColor(obd, SPEED, "Speed", LEDColor(255, 255, 255), LEDColor(255, 0, 0), 0, 160)};
 
 uint8_t lightSettingIndicies[LED_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -39,18 +41,28 @@ String gaugeNames[BUTTON_COUNT] = { "Fuel Level", "RPM", "Trip", "Info", "Speed"
 
 void setup()
 {
-	loadSettings();
+	Serial.begin(9600);
 
+	//initialize and print welcome to the display
 	lcd.begin(16, 2);
 	lcd.print("Welcome");
 
-	if (lightsOn) {
-		neo.begin();
-		for (int i = 0; i < LED_COUNT; i++) {
-			neo.setPixelColor(i, gaugeColors[lightSettingIndicies[i]]->GetColor());
+	//initialize the lights and fade them in to white across a second for a startup animation
+	neo.begin();
+	for (int i = 1; i <= 25; i++) {
+		for (int j = 0; j < LED_COUNT; j++) {
+			neo.setPixelColor(j, i * 10, i * 10, i * 10);
 		}
 		neo.show();
+		delay(60);
 	}
+
+	//read the eeprom into light setting indicies
+	loadSettings();
+
+	//Initialize the obd2 adapter
+	obd->begin();
+	delay(500);
 }
 
 void loop()
@@ -62,12 +74,10 @@ void loop()
 		saveSettings();
 	}
 
-	if (lightsOn) {
-		for (int i = 0; i < LED_COUNT; i++) {
-			neo.setPixelColor(i, gaugeColors[lightSettingIndicies[i]]->GetColor());
-		}
-		neo.show();
+	for (int i = 0; i < LED_COUNT; i++) {
+		neo.setPixelColor(i, gaugeColors[lightSettingIndicies[i]]->GetColor());
 	}
+	neo.show();
 }
 
 void setLCD(int buttonPressed) {
