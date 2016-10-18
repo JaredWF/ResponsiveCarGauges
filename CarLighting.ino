@@ -11,7 +11,7 @@
 #include "ELM327.h"
 
 static const int LED_COUNT = 8;
-static const int SETTING_COUNT = 10;
+static const int SETTING_COUNT = 13;
 static const int BUTTON_COUNT = 6;
 static const int BUTTON_TOLERANCE = 2;
 
@@ -29,8 +29,11 @@ GaugeColor* gaugeColors[SETTING_COUNT] = { new SolidColor(LEDColor(0, 0, 255), "
 											new SolidColor(LEDColor(160, 0, 255), "Purple"),
 											new SolidColor(LEDColor(255, 100, 0), "Orange"),
 											new SolidColor(LEDColor(255, 255, 0), "Yellow"),
-											new EngineColor(obd, RPM, "RPM", LEDColor(255, 255, 255), LEDColor(255, 0, 0), 0, 6500),
-											new EngineColor(obd, SPEED, "Speed", LEDColor(255, 255, 255), LEDColor(255, 0, 0), 0, 160)};
+											new EngineColor(obd, RPM, "RPM", LEDColor(255, 255, 255), LEDColor(255, 0, 0), 0, 4500),
+											new EngineColor(obd, SPEED, "Speed", LEDColor(255, 255, 255), LEDColor(255, 0, 0), 0, 96),
+											new EngineColor(obd, ENGINE_TEMP, "Engine Temp", LEDColor(0, 0, 255), LEDColor(255, 0, 0), -40, 215),
+											new EngineColor(obd, ENGINE_LOAD, "Engine Load", LEDColor(255, 255, 255), LEDColor(255, 0, 0), 0, 100),
+											new EngineColor(obd, THROTTLE, "Throttle %", LEDColor(255, 255, 255), LEDColor(255, 0, 0), 0, 100)};
 
 uint8_t lightSettingIndicies[LED_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -38,6 +41,7 @@ int buttonValues[BUTTON_COUNT] = { 959, 985, 839, 512, 696, 1009 };
 AnalogButtonsDown buttons = AnalogButtonsDown(0, BUTTON_COUNT, buttonValues, BUTTON_TOLERANCE);
 
 String gaugeNames[BUTTON_COUNT] = { "Fuel Level", "RPM", "Trip", "Info", "Speed", "Engine Temp" };
+int counter = 1;
 
 void setup()
 {
@@ -47,7 +51,7 @@ void setup()
 	lcd.begin(16, 2);
 	lcd.print("Welcome");
 
-	//initialize the lights and fade them in to white across a second for a startup animation
+	//initialize the lights and fade them in to white for a startup animation
 	neo.begin();
 	for (int i = 1; i <= 25; i++) {
 		for (int j = 0; j < LED_COUNT; j++) {
@@ -67,17 +71,22 @@ void setup()
 
 void loop()
 {
+	for (int i = 0; i < LED_COUNT; i++) {
+		checkButtons();
+		neo.setPixelColor(i, gaugeColors[lightSettingIndicies[i]]->GetColor(counter));
+	}
+	neo.show();
+
+	counter++;
+}
+
+void checkButtons() {
 	int buttonPressed = buttons.GetButtonDown();
 	if (buttonPressed != -1) {
 		incrementBasedOnGroup(buttonPressed);
 		setLCD(buttonPressed);
 		saveSettings();
 	}
-
-	for (int i = 0; i < LED_COUNT; i++) {
-		neo.setPixelColor(i, gaugeColors[lightSettingIndicies[i]]->GetColor());
-	}
-	neo.show();
 }
 
 void setLCD(int buttonPressed) {

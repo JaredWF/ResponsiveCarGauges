@@ -10,7 +10,7 @@ SolidColor::SolidColor(LEDColor color, String name)
 	_name = name;
 }
 
-uint32_t SolidColor::GetColor()
+uint32_t SolidColor::GetColor(int loopCounter)
 {
 	return _color.GetCombinedColor();
 }

@@ -12,10 +12,18 @@ EngineColor::EngineColor(Elm327 *obd, PID pid, String name, LEDColor minColor, L
 	_pid = pid;
 	_name = name;
 	_interpolater = new ColorInterpolater(minColor, maxColor, minValue, maxValue);
+	_previousCount = 0;
+	_previousColor = minColor.GetCombinedColor();
 }
 
-uint32_t EngineColor::GetColor()
+uint32_t EngineColor::GetColor(int loopCounter)
 {
+	if (loopCounter == _previousCount) {
+		return _previousColor;
+	}
+
+	_previousCount = loopCounter;
+
 	int value = 0;
 	byte status = 0;
 	byte temp = 0;
@@ -27,21 +35,25 @@ uint32_t EngineColor::GetColor()
 		status = _obd->vehicleSpeed(temp);
 		value = (int)temp;
 		break;
-	case FUEL_LEVEL:
-		status = _obd->fuelLevel(temp);
-		value = (int)temp;
-		break;
 	case ENGINE_TEMP:
 		status = _obd->coolantTemperature(value);
+		break;
+	case ENGINE_LOAD:
+		status = _obd->engineLoad(temp);
+		value = (int)temp;
+		break;
+	case THROTTLE:
+		status = _obd->throttlePosition(temp);
+		value = (int)temp;
 		break;
 	}
 
 
 	if (status == ELM_SUCCESS) {
-		uint32_t color = _interpolater->CalculateColor(value);
-		return color;
+		_previousColor = _interpolater->CalculateColorSlerp(value);
+		return _previousColor;
 	}
 	else {
-		return _interpolater->_minColor.GetCombinedColor();
+		return _previousColor;
 	}
 }

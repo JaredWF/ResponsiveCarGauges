@@ -12,7 +12,7 @@
 class GaugeColor 
 {
 	public:
-		virtual uint32_t GetColor()  = 0;
+		virtual uint32_t GetColor(int loopCounter)  = 0;
 		String _name;
 };
 

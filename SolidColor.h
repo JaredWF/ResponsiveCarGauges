@@ -16,7 +16,7 @@ class SolidColor: public GaugeColor
 {
 	public:
 		SolidColor(LEDColor color, String name);
-		uint32_t GetColor();
+		uint32_t GetColor(int loopCounter);
 	private:
 		LEDColor _color;
 };

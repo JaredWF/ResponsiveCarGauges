@@ -14,18 +14,20 @@
 #include "ColorInterpolater.h"
 #include "ELM327.h"
 
-enum PID { RPM, SPEED, FUEL_LEVEL, ENGINE_TEMP };
+enum PID { RPM, SPEED, ENGINE_TEMP, ENGINE_LOAD, THROTTLE };
 
 class EngineColor : public GaugeColor
 {
 public:
 	
 	EngineColor(Elm327 *obd, PID pid, String name, LEDColor minColor, LEDColor maxColor, int minValue, int maxValue);
-	uint32_t GetColor();
+	uint32_t GetColor(int loopCounter);
 private:
 	Elm327 *_obd;
 	PID _pid;
 	ColorInterpolater *_interpolater;
+	int _previousCount;
+	uint32_t _previousColor;
 };
 
 #endif

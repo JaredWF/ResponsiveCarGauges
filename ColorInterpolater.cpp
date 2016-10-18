@@ -24,10 +24,17 @@ ColorInterpolater::ColorInterpolater(LEDColor minColor, LEDColor maxColor, int m
 
 uint32_t ColorInterpolater::CalculateColor(int value)
 {
-	value = Clamp(value);
 	LEDColor resultColor = LEDColor(Interpolate(_minColor._r, _maxColor._r, value),
 		Interpolate(_minColor._g, _maxColor._g, value),
 		Interpolate(_minColor._b, _maxColor._b, value));
+	return resultColor.GetCombinedColor();
+}
+
+uint32_t ColorInterpolater::CalculateColorSlerp(int value)
+{
+	LEDColor resultColor = LEDColor(Slerp(_minColor._r, _maxColor._r, value),
+		Slerp(_minColor._g, _maxColor._g, value),
+		Slerp(_minColor._b, _maxColor._b, value));
 	return resultColor.GetCombinedColor();
 }
 
@@ -42,6 +49,14 @@ uint8_t ColorInterpolater::Interpolate(uint8_t min, uint8_t max, int value)
 {
 	value = Clamp(value);
 	return (uint8_t)((max - min) * ((float)(value - _minValue) / (_maxValue - _minValue)) + min);
+}
+
+uint8_t ColorInterpolater::Slerp(uint8_t min, uint8_t max, int value)
+{
+	value = Clamp(value);
+	int range = _maxValue - _minValue;
+	float theta = (value - _minValue) / (float)range * 3.1415 / 2;
+	return (int)(sin(theta) * (max - min)) + min;
 }
 
 
